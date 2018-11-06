@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class HelloWorldServlet extends HttpServlet {
+public class EchoServlet extends HttpServlet {
 	@Inject
 	BeanManager manager; // This is injected properly
 
@@ -21,6 +21,6 @@ public class HelloWorldServlet extends HttpServlet {
 	protected void doGet( HttpServletRequest req, HttpServletResponse resp ) throws IOException {
 		resp.setContentType( "text/plain" );
 
-		resp.getWriter().append( upperCaseTextProcessing.processText( "hello" ) );
+		resp.getWriter().append( upperCaseTextProcessing.processText( req.getParameter( "msg" ) ) );
 	}
 }

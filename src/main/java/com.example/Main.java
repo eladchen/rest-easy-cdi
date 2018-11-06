@@ -42,7 +42,7 @@ public class Main {
 	}
 
 	static Undertow undertowSimpleServlet( int port ) throws ServletException {
-		ServletInfo si = Servlets.servlet( HelloWorldServlet.class ).addMapping( "/*" );
+		ServletInfo si = Servlets.servlet( EchoServlet.class ).addMapping( "/*" );
 
 		PathHandler path = Handlers.path( Handlers.redirect( "/" ) ).addPrefixPath( "/", deploy( deploymentInfo( si ) ) );
 
