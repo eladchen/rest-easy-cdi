@@ -4,12 +4,13 @@ import io.undertow.Undertow;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestCDI {
+class TestCDI {
 	private static final OkHttpClient client = new OkHttpClient();
 	private static final int port = 6789;
 
@@ -20,7 +21,9 @@ public class TestCDI {
 		final Request request = new Request.Builder().url( url ).build();
 
 		try ( Response response = client.newCall( request ).execute() ) {
-			return response.body().string();
+			final ResponseBody responseBody = response.body();
+
+			return responseBody != null ? responseBody.string() : "";
 		}
 	}
 

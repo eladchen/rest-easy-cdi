@@ -1,10 +1,11 @@
 package com.example.beans;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
+
+// http://buraktas.com/create-qualifiers-cdi-beans/ (Auto)
 
 @ApplicationScoped
-@Named( "upperCase" )
+@TextProcessor
 public class UpperCaseTextProcessing implements TextProcessing {
 	public UpperCaseTextProcessing() {}
 

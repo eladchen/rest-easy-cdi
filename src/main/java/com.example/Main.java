@@ -1,9 +1,9 @@
 package com.example;
 
+import com.example.servlets.http.EchoServlet;
 import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
-import io.undertow.server.handlers.PathHandler;
 import io.undertow.server.handlers.resource.ClassPathResourceManager;
 import io.undertow.servlet.Servlets;
 import io.undertow.servlet.api.DeploymentInfo;
@@ -17,8 +17,9 @@ public class Main {
 	private static final int port = 8000;
 
 	public static void main( String[] args ) throws ServletException {
-		//undertowSimpleServlet( port ).start();
-		undertowJaxRs( port ).start();
+		undertowSimpleServlet( port ).start();
+
+		// undertowJaxRs( port ).start();
 	}
 
 	static Undertow undertowJaxRs( int port ) throws ServletException {
@@ -43,10 +44,11 @@ public class Main {
 
 	static Undertow undertowSimpleServlet( int port ) throws ServletException {
 		ServletInfo si = Servlets.servlet( EchoServlet.class ).addMapping( "/*" );
+		HttpHandler httpHandler = deploy( deploymentInfo( si ) );
 
-		PathHandler path = Handlers.path( Handlers.redirect( "/" ) ).addPrefixPath( "/", deploy( deploymentInfo( si ) ) );
+		httpHandler = Handlers.path( Handlers.redirect( "/" ) ).addPrefixPath( "/", httpHandler );
 
-		return undertow( "0.0.0.0", port, path );
+		return undertow( "0.0.0.0", port, httpHandler );
 	}
 
 	// *** Shared logic across setups ***

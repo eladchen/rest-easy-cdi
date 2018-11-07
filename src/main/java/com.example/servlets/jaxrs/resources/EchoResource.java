@@ -1,12 +1,11 @@
-package com.example.resources;
+package com.example.servlets.jaxrs.resources;
 
-import com.example.beans.LowerCaseTextProcessing;
-import com.example.beans.UpperCaseTextProcessing;
+import com.example.beans.TextProcessing;
+import com.example.beans.TextProcessor;
 
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -21,21 +20,16 @@ import java.util.concurrent.CompletableFuture;
 
 @Path("/")
 @Produces(MediaType.TEXT_PLAIN)
-@RequestScoped
 public class EchoResource {
 	@Inject
-	@Named("upperCase")
-	private UpperCaseTextProcessing upperCaseTextProcessing;
-
-	@Inject
-	@Named("lowerCase")
-	private LowerCaseTextProcessing lowerCaseTextProcessing;
+	@TextProcessor
+	private TextProcessing upperCaseTextProcessing;
 
 	@Inject
 	BeanManager manager;
 
 	@GET
-	public void greet( @Suspended AsyncResponse response, @BeanParam Aggregator queryParams ) {
+	public void echo( @Suspended AsyncResponse response, @BeanParam Aggregator queryParams ) {
 		final Response.ResponseBuilder responseBuilder = Response.ok();
 
 		if ( queryParams.async ) {

@@ -1,6 +1,9 @@
 package com.example;
 
-import com.example.resources.EchoResource;
+import com.example.beans.TextProcessing;
+import com.example.beans.TextProcessor;
+import com.example.beans.UpperCaseTextProcessing;
+import com.example.servlets.jaxrs.resources.EchoResource;
 
 import javax.ws.rs.core.Application;
 import java.util.HashSet;
@@ -12,6 +15,9 @@ public class RestEasyCDIApp extends Application {
 		final Set<Class<?>> classSet = new HashSet<>();
 
 		classSet.add( EchoResource.class );
+		classSet.add( UpperCaseTextProcessing.class );
+		classSet.add( TextProcessing.class );
+		classSet.add( TextProcessor.class );
 
 		return classSet;
 	}
