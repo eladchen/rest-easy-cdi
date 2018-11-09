@@ -1,12 +1,15 @@
 package com.example;
 
 import io.undertow.Undertow;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -16,28 +19,39 @@ class TestCDI {
 
 	private Undertow server;
 
-	private String requestMessage( String message ) throws Exception {
-		final String url = String.format( "http://0.0.0.0:%d/?msg=%s", port, message );
-		final Request request = new Request.Builder().url( url ).build();
+	private String getResponseBody( final Request request ) {
+        try ( Response response = client.newCall( request ).execute() ) {
+            final ResponseBody responseBody = response.body();
 
-		try ( Response response = client.newCall( request ).execute() ) {
-			final ResponseBody responseBody = response.body();
+            return responseBody != null ? responseBody.string() : "";
+        }
+        catch ( Exception e ) {
+            throw new RuntimeException( e );
+        }
+    }
 
-			return responseBody != null ? responseBody.string() : "";
-		}
-	}
-
-	private void assignAndStartServer( Undertow undertowServer ) {
+	private Undertow assignAndStartServer( Undertow undertowServer ) {
 		server = undertowServer;
 
 		server.start();
+
+		return undertowServer;
 	}
 
-	private void assertMessageIsUpperCased( Undertow undertowServer, String message ) throws Exception {
-		assignAndStartServer( undertowServer );
+    private void assertMessageIsUpperCased( String message, Consumer<Request.Builder> beforeRequestBuild ) {
+        final String url = String.format( "http://0.0.0.0:%d/?msg=%s", port, message );
+        final Request.Builder requestBuilder = new Request.Builder().url( url );
 
-		assertEquals( message.toUpperCase(), requestMessage( message ) );
-	}
+        if ( beforeRequestBuild != null ) {
+            beforeRequestBuild.accept( requestBuilder );
+        }
+
+        assertEquals( message.toUpperCase(), getResponseBody( requestBuilder.build() ) );
+    }
+
+    private void assertMessageIsUpperCased( String message ) {
+	    assertMessageIsUpperCased( message, null );
+    }
 
 	@AfterEach
 	void stopServer() {
@@ -48,11 +62,22 @@ class TestCDI {
 
 	@Test
 	void testJaxRsCDI() throws Exception {
-		assertMessageIsUpperCased( Main.undertowJaxRs( port ), "jaxServlet" );
+	    assignAndStartServer( Main.undertowJaxRs( port ) );
+
+	    // Test synchronous response
+	    assertMessageIsUpperCased( "synchronousResponse" );
+
+	    // Test asynchronous response
+        assertMessageIsUpperCased( "asynchronousResponse", builder -> {
+            // Nasty trick
+            builder.url( builder.build().url().toString() + "&async=true" );
+        } );
 	}
 
 	@Test
 	void testHttpServletCDI() throws Exception {
-		assertMessageIsUpperCased( Main.undertowSimpleServlet( port ), "httpServlet" );
+        assignAndStartServer( Main.undertowSimpleServlet( port ) );
+
+		assertMessageIsUpperCased( "httpServlet" );
 	}
 }

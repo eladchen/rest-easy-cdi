@@ -32,9 +32,12 @@ public class Main {
 		final DeploymentInfo deploymentInfo = deploymentInfo();
 		final ServletInfo servletInfo = Servlets.servlet( HttpServlet30Dispatcher.class );
 
-        // This isn't needed with v3 container according the the user-guide (48.4)
+        // "resteasy.injector.factory" isn't needed with v3 container according the the user-guide (48.4)
         // https://docs.jboss.org/resteasy/docs/3.6.2.Final/userguide/html/CDI.html#d4e2794
+        // *** This isn't right when using an embedded setup such as this one ***
         servletInfo.addInitParam( "resteasy.injector.factory", CdiInjectorFactory.class.getName() );
+
+        // The rest of the jax-rs servlet setup..
         servletInfo.addInitParam( "javax.ws.rs.Application", RestEasyCDIApp.class.getName() );
         servletInfo.setLoadOnStartup( 1 );
         servletInfo.setAsyncSupported( true );
