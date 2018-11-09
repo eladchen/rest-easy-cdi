@@ -23,6 +23,13 @@ test {
     useJUnitPlatform()
 }
 
+sourceSets {
+    main {
+        output.resourcesDir = 'build/out'
+        output.classesDir   = 'build/out'
+    }
+}
+
 configurations {
     implementation {
         // http://logging.apache.org/log4j/2.x/faq.html#which_jars
@@ -48,9 +55,9 @@ dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j18-impl', version: "$log4jVersion"
 
     // Restful (RestEasy as the JAX-RS spec & its extensions)
-    implementation group: 'org.jboss.resteasy', name: 'resteasy-cdi',              version: "$restEasyVersion"
-    implementation group: 'org.jboss.resteasy', name: 'resteasy-jaxrs',            version: "$restEasyVersion"
-    implementation group: 'org.jboss.resteasy', name: 'resteasy-jackson-provider', version: "$restEasyVersion"
+    implementation group: 'org.jboss.resteasy', name: 'resteasy-cdi',                 version: "$restEasyVersion"
+    implementation group: 'org.jboss.resteasy', name: 'resteasy-jaxrs',               version: "$restEasyVersion"
+    implementation group: 'org.jboss.resteasy', name: 'resteasy-jackson-provider',    version: "$restEasyVersion"
 
     // Testing
     testImplementation group: 'com.squareup.okhttp3', name: 'okhttp',               version: '3.11.0'

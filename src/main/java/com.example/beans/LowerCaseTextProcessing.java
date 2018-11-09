@@ -1,13 +1,11 @@
 package com.example.beans;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 import javax.inject.Named;
 
-@ApplicationScoped
-@Named("lowerCase")
+@Dependent
+@Named( "lowerCase" )
 public class LowerCaseTextProcessing implements TextProcessing {
-	public LowerCaseTextProcessing() {}
-
 	@Override
 	public String processText( String text ) {
 		return text.toLowerCase();
