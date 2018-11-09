@@ -1,5 +1,6 @@
 package com.example.beans;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Qualifier;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -12,4 +13,5 @@ import static java.lang.annotation.ElementType.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({FIELD, METHOD, TYPE, PARAMETER})
 @Qualifier
-public @interface TextProcessor {}
+@RequestScoped
+public @interface UpperCaseTextProcessor {}

@@ -1,7 +1,7 @@
 package com.example;
 
 import com.example.beans.TextProcessing;
-import com.example.beans.TextProcessor;
+import com.example.beans.UpperCaseTextProcessor;
 import com.example.beans.UpperCaseTextProcessing;
 import com.example.servlets.jaxrs.resources.EchoResource;
 
@@ -17,7 +17,7 @@ public class RestEasyCDIApp extends Application {
 		classSet.add( EchoResource.class );
 		classSet.add( UpperCaseTextProcessing.class );
 		classSet.add( TextProcessing.class );
-		classSet.add( TextProcessor.class );
+		classSet.add( UpperCaseTextProcessor.class );
 
 		return classSet;
 	}
