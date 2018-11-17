@@ -34,8 +34,6 @@ class Welder {
     static Weld syntheticWeldContainer( String... packages ) {
         final Weld weld = new Weld();
 
-        // weld.containerId( "my-custom-cdi" ); // This is not unique between test runs (& not shutdown properly).
-
         // No sure what happens when both
         // "disableDiscovery" & "scanClasspathEntries" are on
         weld.scanClasspathEntries();
