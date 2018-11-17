@@ -22,4 +22,6 @@ Run using:
 ##### StackOverflow
 [Gradle bean discovery problems](https://stackoverflow.com/questions/30255760/bean-discovery-problems-when-using-weld-se-with-gradle-application-plugin#answer-30325614)
 
+Side quests
+- https://stackoverflow.com/questions/25385802/inject-context-cdi-servlet-into-new-futuretask-thread
 - https://youtrack.jetbrains.com/issue/IDEA-175172
