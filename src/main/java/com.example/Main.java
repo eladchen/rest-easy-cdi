@@ -74,9 +74,11 @@ public class Main {
     }
 
     // *** Shared logic across setups ***
-    static void addWeld( DeploymentInfo deploymentInfo, ServletInfo servletInfo ) {
+    static DeploymentInfo addWeld( DeploymentInfo deploymentInfo ) {
         deploymentInfo.addListener( Servlets.listener( WeldListener.class ) );
         deploymentInfo.addListener( Servlets.listener( Listener.class ) );
+
+        return deploymentInfo;
     }
 
     static DeploymentInfo deploymentInfo() {
@@ -96,7 +98,7 @@ public class Main {
     static HttpHandler deploy( DeploymentInfo deploymentInfo, ServletInfo servletInfo ) throws ServletException {
         deploymentInfo.addServlet( servletInfo );
 
-        addWeld( deploymentInfo, servletInfo );
+        addWeld( deploymentInfo );
 
         DeploymentManager deploymentManager = Servlets.defaultContainer().addDeployment( deploymentInfo );
 
