@@ -7,6 +7,7 @@ import org.jboss.weld.bootstrap.spi.helpers.EEModuleDescriptorImpl;
 import org.jboss.weld.config.ConfigurationKey;
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.servlet.Listener;
+import org.jboss.weld.environment.servlet.WeldServletLifecycle;
 import org.jboss.weld.environment.servlet.services.ServletResourceInjectionServices;
 
 import org.reflections.Reflections;
@@ -41,7 +42,7 @@ public class WeldListener implements ServletContextListener {
 
     @Override
     public void contextInitialized( ServletContextEvent sce ) {
-        // weld.containerId( "my-custom-cdi" ); // This is not unique between runs (& not shutdown properly).
+        // weld.containerId( "my-custom-cdi" ); // This is not unique between test runs (& not shutdown properly).
 
         // No sure what happens when both
         // "disableDiscovery" & "scanClasspathEntries" are on
@@ -72,5 +73,7 @@ public class WeldListener implements ServletContextListener {
         weld.addExtension( new ResteasyCdiExtension() );
 
         sce.getServletContext().setAttribute( Listener.CONTAINER_ATTRIBUTE_NAME, weld );
+
+        // sce.getServletContext().setAttribute(WeldServletLifecycle.BEAN_MANAGER_ATTRIBUTE_NAME, weld.initialize().getBeanManager() );
     }
 }

@@ -75,6 +75,8 @@ public class Main {
 
     // *** Shared logic across setups ***
     static DeploymentInfo addWeld( DeploymentInfo deploymentInfo ) {
+        // io.undertow.servlet.api.ListenerInfo.ListenerInfo()
+        // Use the explicit signature – programmatic: true (spelling error)
         deploymentInfo.addListener( Servlets.listener( WeldListener.class ) );
         deploymentInfo.addListener( Servlets.listener( Listener.class ) );
 
