@@ -74,6 +74,6 @@ public class WeldListener implements ServletContextListener {
 
         sce.getServletContext().setAttribute( Listener.CONTAINER_ATTRIBUTE_NAME, weld );
 
-        // sce.getServletContext().setAttribute(WeldServletLifecycle.BEAN_MANAGER_ATTRIBUTE_NAME, weld.initialize().getBeanManager() );
+        sce.getServletContext().setAttribute(WeldServletLifecycle.BEAN_MANAGER_ATTRIBUTE_NAME, weld.initialize().getBeanManager() );
     }
 }
