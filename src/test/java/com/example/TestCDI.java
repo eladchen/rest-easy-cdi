@@ -63,10 +63,10 @@ class TestCDI {
 	void testJaxRsCDI() throws Exception {
 	    assignAndStartServer( Main.undertowJaxRs( port ) );
 
-	    // Test synchronous response
+	    // Test synchronous response.
 	    assertMessageIsUpperCased( "synchronousResponse" );
 
-	    // Test asynchronous response
+	    // Test asynchronous response.
         assertMessageIsUpperCased( "asynchronousResponse", builder -> {
             // Nasty trick
             builder.url( builder.build().url().toString() + "&async=true" );
