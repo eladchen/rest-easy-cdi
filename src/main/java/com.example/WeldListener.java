@@ -61,9 +61,6 @@ public class WeldListener implements ServletContextListener {
         weld.setBeanDiscoveryMode( BeanDiscoveryMode.ANNOTATED );
         weld.setClassLoader( WeldListener.class.getClassLoader() );
 
-        weld.addServices( new ServletResourceInjectionServices() {} );
-        weld.addServices( new EEModuleDescriptorImpl( sce.getServletContext().getContextPath(), EEModuleDescriptor.ModuleType.WEB ) );
-
         weld.addProperty( ConfigurationKey.BEAN_IDENTIFIER_INDEX_OPTIMIZATION.get(), Boolean.FALSE.toString() );
         weld.addProperty( ConfigurationKey.CONCURRENT_DEPLOYMENT.get(), Boolean.FALSE.toString() );
         weld.addProperty( Weld.ARCHIVE_ISOLATION_SYSTEM_PROPERTY, true );
@@ -74,6 +71,6 @@ public class WeldListener implements ServletContextListener {
 
         sce.getServletContext().setAttribute( Listener.CONTAINER_ATTRIBUTE_NAME, weld );
 
-        sce.getServletContext().setAttribute(WeldServletLifecycle.BEAN_MANAGER_ATTRIBUTE_NAME, weld.initialize().getBeanManager() );
+        sce.getServletContext().setAttribute( WeldServletLifecycle.BEAN_MANAGER_ATTRIBUTE_NAME, weld.initialize().getBeanManager() );
     }
 }
