@@ -4,8 +4,10 @@ import com.example.beans.TextProcessing;
 
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.spi.BeanManager;
+
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -16,6 +18,7 @@ import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import java.util.concurrent.CompletableFuture;
 
 @Path("/")

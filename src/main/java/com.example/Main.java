@@ -25,8 +25,8 @@ import org.jboss.weld.environment.se.WeldContainer;
 import org.jboss.weld.environment.servlet.Listener;
 import org.jboss.weld.environment.servlet.WeldServletLifecycle;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import javax.servlet.ServletException;
 
 import java.util.stream.Stream;
@@ -46,7 +46,7 @@ public class Main {
 	}
 
     public WeldContainer initializeWeld() {
-        final Weld weld = new org.jboss.weld.environment.se.Weld();
+        final Weld weld = new Weld();
 
         Runtime.getRuntime().addShutdownHook( new Thread( weld::shutdown ) );
 
@@ -58,9 +58,8 @@ public class Main {
         final ServletInfo servletInfo = Servlets.servlet( HttpServlet30Dispatcher.class );
 
         // Weld I **** you.
-        // Weld weld = createBasicWeldContainer();
-        // weld.addExtension( new ResteasyCdiExtension() );
-        // addWeldListener( weld.initialize(), deploymentInfo );
+        Weld weld = weld().addExtension( new ResteasyCdiExtension() );
+        useWeldContainer( weld.initialize(), deploymentInfo );
 
         // "resteasy.injector.factory" isn't needed with v3 container according the the user-guide (48.4)
         // https://docs.jboss.org/resteasy/docs/3.6.2.Final/userguide/html/CDI.html#d4e2794
@@ -77,8 +76,6 @@ public class Main {
         // What is this used for?
         // deploymentInfo.addListener( Servlets.listener( org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap.class ) );
 
-        deploymentInfo.addListener( Servlets.listener( WeldListener.class ) );
-
         return undertow( "0.0.0.0", port, deploy( deploymentInfo, servletInfo ) );
     }
 
@@ -87,7 +84,7 @@ public class Main {
         final ServletInfo servletInfo = Servlets.servlet( EchoServlet.class ).addMapping( "/*" );
         final PathHandler pathHandler = Handlers.path( Handlers.redirect( "/" ) );
 
-        addWeldListener( deploymentInfo );
+        useWeldContainer( deploymentInfo );
 
         pathHandler.addPrefixPath( "/", deploy( deploymentInfo, servletInfo ) );
 
@@ -95,28 +92,31 @@ public class Main {
     }
 
     // *** Shared logic across setups ***
-    static Weld createBasicWeldContainer() {
+    static Weld weld() {
         return Welder.syntheticWeldContainer( "com.example" );
     }
 
-    static DeploymentInfo addWeldListener( final WeldContainer weldContainer, final DeploymentInfo deploymentInfo ) {
+    // This method could have used 'WeldListener' directly.
+    // This is just another (better) approach which enables
+    // Reusing the same container used by the rest of the app.
+    static DeploymentInfo useWeldContainer( final WeldContainer weldContainer, final DeploymentInfo deploymentInfo ) {
         // io.undertow.servlet.api.ListenerInfo.ListenerInfo()
         // Use the explicit signature – programmatic: true (spelling error)
-        final InstanceFactory<Listener> listenerFactory = () -> new InstanceHandle<Listener>() {
+        final ServletContextListener listener = new Listener() {
             @Override
-            public Listener getInstance() {
-                return new Listener() {
-                    @Override
-                    public void contextInitialized( ServletContextEvent sce ) {
-                        final ServletContext servletContext = sce.getServletContext();
+            public void contextInitialized( ServletContextEvent sce ) {
+                sce.getServletContext().setAttribute( Listener.CONTAINER_ATTRIBUTE_NAME, weldContainer );
 
-                        servletContext.setAttribute( Listener.CONTAINER_ATTRIBUTE_NAME, weldContainer );
+                sce.getServletContext().setAttribute( WeldServletLifecycle.BEAN_MANAGER_ATTRIBUTE_NAME, weldContainer.getBeanManager() );
 
-                        servletContext.setAttribute( WeldServletLifecycle.BEAN_MANAGER_ATTRIBUTE_NAME, weldContainer.getBeanManager() );
+                super.contextInitialized( sce );
+            }
+        };
 
-                        super.contextInitialized( sce );
-                    }
-                };
+        final InstanceFactory<ServletContextListener> listenerFactory = () -> new InstanceHandle<ServletContextListener>() {
+            @Override
+            public ServletContextListener getInstance() {
+                return listener;
             }
 
             @Override
@@ -130,8 +130,8 @@ public class Main {
         return deploymentInfo;
     }
 
-    static DeploymentInfo addWeldListener( DeploymentInfo deploymentInfo ) {
-        addWeldListener( createBasicWeldContainer().initialize(), deploymentInfo );
+    static DeploymentInfo useWeldContainer( DeploymentInfo deploymentInfo ) {
+        useWeldContainer( weld().initialize(), deploymentInfo );
 
         return deploymentInfo;
     }
