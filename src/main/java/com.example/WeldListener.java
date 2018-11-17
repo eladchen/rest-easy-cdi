@@ -49,8 +49,9 @@ public class WeldListener implements ServletContextListener {
         weld.disableDiscovery();
 
         // Do not relay one this API - It doesn't coup well with common IDE
-        // folders structures for generated classes. This needs to be
-        // raised in jBoss tracker.
+        // folders structures for generated classes.
+        // The package name is scanned as a folder instead of a classpath.
+        // This needs to be raised in jBoss tracker.
         // weld.addPackages( true, Main.class.getPackage() );
 
         // I wonder if this is the best way to go about it.
