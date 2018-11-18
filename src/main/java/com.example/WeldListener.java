@@ -32,9 +32,9 @@ public class WeldListener extends Listener implements ServletContextListener {
 
             logger.debug( "Using WeldContainer with ID: {}", container.getId() );
 
-            servletContext.setAttribute( Listener.CONTAINER_ATTRIBUTE_NAME, weldContainer );
+            servletContext.setAttribute( Listener.CONTAINER_ATTRIBUTE_NAME, container );
 
-            servletContext.setAttribute( WeldServletLifecycle.BEAN_MANAGER_ATTRIBUTE_NAME, ((WeldContainer)weldContainer).getBeanManager() );
+            servletContext.setAttribute( WeldServletLifecycle.BEAN_MANAGER_ATTRIBUTE_NAME, container.getBeanManager() );
         }
 
         super.contextInitialized( sce );
