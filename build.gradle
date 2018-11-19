@@ -15,6 +15,15 @@ ext {
     junitVersion    = '5.3.1'
 }
 
+// https://discuss.gradle.org/t/regarding-the-annotation-processors-on-compile-classpath-warning-in-gradle-4-6/26144/23
+compileJava {
+    options.compilerArgs += '-proc:none'
+}
+
+compileTestJava {
+    options.compilerArgs += '-proc:none'
+}
+
 repositories {
     mavenCentral()
 }
