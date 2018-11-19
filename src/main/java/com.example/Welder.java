@@ -2,9 +2,7 @@ package com.example;
 
 import org.jboss.weld.bootstrap.spi.BeanDiscoveryMode;
 import org.jboss.weld.config.ConfigurationKey;
-
 import org.jboss.weld.environment.se.Weld;
-
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.reflections.scanners.SubTypesScanner;
@@ -51,7 +49,11 @@ class Welder {
         } );
 
         weld.setBeanDiscoveryMode( BeanDiscoveryMode.ANNOTATED );
-        weld.setClassLoader( Welder.class.getClassLoader() );
+
+        // weld.setClassLoader( Welder.class.getClassLoader() );
+        // weld.setResourceLoader( new ClassLoaderResourceLoader( Welder.class.getClassLoader() ) );
+        // weld.addServices( new EEModuleDescriptorImpl( weld.getContainerId(), EEModuleDescriptor.ModuleType.WEB ) );
+        // weld.addServices( new WeldResourceLoader() );
 
         weld.addProperty( ConfigurationKey.BEAN_IDENTIFIER_INDEX_OPTIMIZATION.get(), Boolean.FALSE.toString() );
         weld.addProperty( ConfigurationKey.CONCURRENT_DEPLOYMENT.get(), Boolean.FALSE.toString() );
