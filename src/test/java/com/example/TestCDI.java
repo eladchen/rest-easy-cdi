@@ -15,8 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class TestCDI {
 	private static final OkHttpClient client = new OkHttpClient();
 	private static final int port = 6789;
+	private static final String host = "0.0.0.0";
 
-	private Undertow server;
+	private UndertowServer undertowServer;
 
 	private String getResponseBody( final Request request ) {
         try ( Response response = client.newCall( request ).execute() ) {
@@ -29,16 +30,16 @@ class TestCDI {
         }
     }
 
-	private Undertow assignAndStartServer( Undertow undertowServer ) {
-		server = undertowServer;
+	private UndertowServer assignAndStartApp( UndertowServer undertowServer ) {
+		this.undertowServer = undertowServer;
 
-		server.start();
+		this.undertowServer.start( Undertow.builder().addHttpListener( port, host ) );
 
 		return undertowServer;
 	}
 
     private void assertMessageIsUpperCased( String message, Consumer<Request.Builder> beforeRequestBuild ) {
-        final String url = String.format( "http://0.0.0.0:%d/?msg=%s", port, message );
+        final String url = String.format( "http://%s:%d/?msg=%s", host, port, message );
         final Request.Builder requestBuilder = new Request.Builder().url( url );
 
         if ( beforeRequestBuild != null ) {
@@ -54,14 +55,14 @@ class TestCDI {
 
 	@AfterEach
 	void stopServer() {
-		if ( server != null ) {
-			server.stop();
+		if ( undertowServer != null ) {
+			undertowServer.stop();
 		}
 	}
 
 	@Test
 	void testJaxRsCDI() throws Exception {
-	    assignAndStartServer( Main.undertowJaxRs( port ) );
+	    assignAndStartApp( Main.app( new String[]{ "jaxRs" } ) );
 
 	    // Test synchronous response.
 	    assertMessageIsUpperCased( "synchronousResponse" );
@@ -75,7 +76,7 @@ class TestCDI {
 
 	@Test
 	void testHttpServletCDI() throws Exception {
-        assignAndStartServer( Main.undertowSimpleServlet( port ) );
+        assignAndStartApp( Main.app( new String[]{} ) );
 
 		assertMessageIsUpperCased( "httpServlet" );
 	}
