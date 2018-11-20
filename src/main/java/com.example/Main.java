@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 public class Main {
     public static final String SERVLET_MAPPING_PREFIX = "/";
 
-    public static String[] PARAMETERS;
+    private static String[] PARAMETERS;
 
     public static void main( String[] args ) {
         PARAMETERS = args;
