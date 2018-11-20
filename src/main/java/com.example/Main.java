@@ -2,11 +2,13 @@ package com.example;
 
 import com.example.servlets.http.EchoServlet;
 import com.example.servlets.jaxrs.RestEasyCDIApp;
+
 import io.undertow.server.handlers.resource.ClassPathResourceManager;
 import io.undertow.server.handlers.resource.ResourceManager;
 import io.undertow.servlet.Servlets;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.ServletInfo;
+
 import org.jboss.resteasy.cdi.CdiInjectorFactory;
 import org.jboss.resteasy.cdi.ResteasyCdiExtension;
 import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
@@ -15,6 +17,7 @@ import org.jboss.weld.environment.se.beans.ParametersFactory;
 import org.jboss.weld.environment.se.bindings.Parameters;
 
 import javax.enterprise.inject.Produces;
+
 import java.util.stream.Stream;
 
 public class Main {
@@ -23,14 +26,14 @@ public class Main {
     private static String[] PARAMETERS;
 
     public static void main( String[] args ) {
-        PARAMETERS = args;
-
         app( args ).start();
     }
 
     static UndertowServer app( String[] args ) {
         final UndertowServer app = new UndertowServer();
         final Weld weld = weld();
+
+        PARAMETERS = args;
 
         ServletInfo servletInfo;
 
