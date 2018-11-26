@@ -56,11 +56,11 @@ public class Main {
         final UndertowServer undertowServer = new UndertowServer();
         final Weld weld = weld();
         final List<ServletInfo> servletsInfoList = new ArrayList<>();
-        final ServletInfo jaxRsServlet = restEasyServlet();
+        final ServletInfo restEasyServlet = restEasyServlet();
         final ServletInfo httpServlet = httpServlet();
 
-        if ( !arguments.contains( jaxRsServlet.getName() ) ) {
-            servletsInfoList.add( jaxRsServlet );
+        if ( !arguments.contains( restEasyServlet.getName() ) ) {
+            servletsInfoList.add( restEasyServlet );
 
             weld.addExtension( new ResteasyCdiExtension() );
         }
