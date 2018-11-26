@@ -2,6 +2,7 @@ package com.example.beans;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import org.jboss.weld.environment.se.beans.ParametersFactory;
 import org.jboss.weld.environment.se.bindings.Parameters;
 import org.jboss.weld.environment.se.events.ContainerInitialized;
@@ -26,14 +27,14 @@ public class Observers {
     // ===========
 
     public void requestScopeInit( @Observes @Initialized(RequestScoped.class) HttpServletRequest httpServletRequest ) {
-        logger.info( "HTTP Request to {} is initialized", httpServletRequest.getRequestURL().toString() );
+        logger.info( "HTTP Request to {} is initialized.", httpServletRequest.getRequestURL().toString() );
     }
 
     public void requestScopeBeforeDestroyed( @Observes @BeforeDestroyed(RequestScoped.class) HttpServletRequest httpServletRequest ) {
-        logger.info( "HTTP Request to {} is about to be destroyed", httpServletRequest.getRequestURL().toString() );
+        logger.info( "HTTP Request to {} is about to be destroyed.", httpServletRequest.getRequestURL().toString() );
     }
 
     public void requestScopeDestroyed( @Observes @Destroyed(RequestScoped.class) HttpServletRequest httpServletRequest ) {
-        logger.info( "HTTP Request to {} is destroyed", httpServletRequest.getRequestURL().toString() );
+        logger.info( "HTTP Request to {} is destroyed.", httpServletRequest.getRequestURL().toString() );
     }
 }
