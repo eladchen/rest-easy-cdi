@@ -26,7 +26,7 @@ public class UndertowServer {
     private WeldContainer weldContainer;
     private DeploymentInfo deploymentInfo = Servlets.deployment();
     private List<ServletInfo> servletInfoList = new ArrayList<>();
-    private Function<HttpHandler, HttpHandler> handler = Function.identity();
+    private Function<HttpHandler, HttpHandler> handlerMiddleware = Function.identity();
 
     public void addServlet( ServletInfo servletInfo ) {
         servletInfoList.add( servletInfo );
@@ -45,7 +45,7 @@ public class UndertowServer {
     }
 
     public void setHttpMiddleware( Function<HttpHandler, HttpHandler> func ) {
-        this.handler = func;
+        this.handlerMiddleware = func;
     }
 
     public void start( Undertow.Builder undertowBuilder ) throws RuntimeException {
@@ -53,20 +53,20 @@ public class UndertowServer {
             if ( undertow == null ) {
                 final WeldContainer container = getWeldContainer();
 
-                for ( ServletInfo servletInfo : servletInfoList ) {
-                    deploymentInfo.addServlet( servletInfo );
-                }
-
                 if ( container != null ) {
                     weldContainer = container;
 
                     useWeldContainer( container, deploymentInfo );
                 }
 
+                for ( ServletInfo servletInfo : servletInfoList ) {
+                    deploymentInfo.addServlet( servletInfo );
+                }
+
                 HttpHandler httpHandler = servletsHandler( deploymentInfo );
 
-                if ( handler != null ) {
-                    httpHandler = handler.apply( httpHandler );
+                if ( handlerMiddleware != null ) {
+                    httpHandler = handlerMiddleware.apply( httpHandler );
 
                     if ( httpHandler == null ) {
                         throw new NullPointerException( "httpHandler can not be null" );
