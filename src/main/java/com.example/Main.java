@@ -19,6 +19,7 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import org.hsqldb.jdbc.JDBCDriver;
 
 import org.jboss.resteasy.cdi.CdiInjectorFactory;
