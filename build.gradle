@@ -1,80 +1,90 @@
-apply plugin: 'java'
-apply plugin: 'application'
-apply plugin: 'idea'
+apply plugin: "java"
+apply plugin: "application"
+apply plugin: "idea"
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-mainClassName = 'com.example.Main'
+project.sourceCompatibility = JavaVersion.VERSION_1_8
+project.targetCompatibility = JavaVersion.VERSION_1_8
 
 ext {
-    log4jVersion    = '2.11.1'
-    undertowVersion = '2.0.15.Final'
-    restEasyVersion = '3.6.2.Final'
-    weldVersion     = '3.0.5.Final'
-    junitVersion    = '5.3.1'
+	versions = [
+		log4j   : "2.11.1",
+		undertow: "2.0.15.Final",
+		restEasy: "3.6.2.Final",
+		weld    : "3.0.5.Final",
+		junit   : "5.3.1",
+	]
 }
 
-// https://discuss.gradle.org/t/regarding-the-annotation-processors-on-compile-classpath-warning-in-gradle-4-6/26144/23
-compileJava {
-    options.compilerArgs += '-proc:none'
-}
-
-compileTestJava {
-    options.compilerArgs += '-proc:none'
+application {
+	mainClassName = "com.example.Main"
 }
 
 repositories {
-    mavenCentral()
-}
-
-test {
-    useJUnitPlatform()
+	mavenCentral()
 }
 
 configurations {
-    implementation {
-        // http://logging.apache.org/log4j/2.x/faq.html#which_jars
-        exclude group: 'log4j',                    module: 'log4j'
-        exclude group: 'org.slf4j',                module: 'log4j-over-slf4j'
-        exclude group: 'ch.qos.logback',           module: 'logback-core'
-        exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
-    }
+	implementation {
+		// http://logging.apache.org/log4j/2.x/faq.html#which_jars
+		exclude group: "log4j", module: "log4j"
+		exclude group: "org.slf4j", module: "log4j-over-slf4j"
+		exclude group: "ch.qos.logback", module: "logback-core"
+		exclude group: "org.apache.logging.log4j", module: "log4j-to-slf4j"
+	}
 }
 
 dependencies {
-    // Embedded Web Server / Container
-    implementation group: 'io.undertow', name: 'undertow-core',    version: "$undertowVersion"
-    implementation group: 'io.undertow', name: 'undertow-servlet', version: "$undertowVersion"
+	// Embedded Web Server / Container
+	// Exclusion is due to https://issues.jboss.org/browse/UNDERTOW-1355
+	implementation group: 'io.undertow', name: 'undertow-servlet', version: "${versions.undertow}", {
+		exclude group: 'org.jboss.xnio', module: 'xnio-api'
+		exclude group: 'org.jboss.xnio', module: 'xnio-nio'
+	}
 
-    // CDI (Weld as the JSR-299 spec)
-    implementation group: 'org.jboss',              name: 'jandex',            version: '2.1.0.Beta1'
-    implementation group: 'org.jboss.weld.servlet', name: 'weld-servlet-core', version: "$weldVersion"
-    implementation group: 'org.jboss.weld.se',      name: 'weld-se-core',      version: "$weldVersion"
+	implementation group: 'org.jboss.xnio', name: 'xnio-api', version: '3.3.8.Final', {
+		exclude group: 'org.jboss.threads', module: 'jboss-threads'
+	}
 
-    // Logging
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-api',          version: "$log4jVersion"
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core',         version: "$log4jVersion"
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j18-impl', version: "$log4jVersion"
+	implementation group: 'org.jboss.xnio',		 name: 'xnio-nio',			version: '3.6.5.Final'
+	implementation group: 'org.jboss.threads', name: 'jboss-threads', version: '2.3.2.Final'
 
-    // Restful (RestEasy as the JAX-RS spec & its extensions)
-    implementation group: 'org.jboss.resteasy', name: 'resteasy-cdi',                 version: "$restEasyVersion"
-    implementation group: 'org.jboss.resteasy', name: 'resteasy-jaxrs',               version: "$restEasyVersion"
-    implementation group: 'org.jboss.resteasy', name: 'resteasy-jackson-provider',    version: "$restEasyVersion"
+	// CDI (Weld as the JSR-299 spec provider)
+	implementation group: "org.jboss", 							name: "jandex", 					 version: "2.1.0.Beta1"
+	implementation group: "org.jboss.weld.se", 			name: "weld-se-core", 		 version: "$versions.weld"
+	implementation group: "org.jboss.weld.servlet", name: "weld-servlet-core", version: "$versions.weld"
 
-    // Reflection library
-    implementation group: 'org.reflections', name: 'reflections', version: '0.9.11'
+	// Logging
+	implementation group: "org.apache.logging.log4j", name: "log4j-api",					version: "$versions.log4j"
+	implementation group: "org.apache.logging.log4j", name: "log4j-core",					version: "$versions.log4j"
+	implementation group: "org.apache.logging.log4j", name: "log4j-slf4j18-impl", version: "$versions.log4j"
 
-    // Persistence (Hibernate as the JPA provider)
-    implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.3.7.Final'
+	// Restful (RestEasy as the JAX-RS spec provider & its extensions)
+	implementation group: "org.jboss.resteasy", name: "resteasy-cdi", 						 version: "$versions.restEasy"
+	implementation group: "org.jboss.resteasy", name: "resteasy-jaxrs", 					 version: "$versions.restEasy"
+	implementation group: "org.jboss.resteasy", name: "resteasy-jackson-provider", version: "$versions.restEasy"
 
-    // An in-memory database
-    implementation group: 'org.hsqldb', name: 'hsqldb', version: '2.4.1'
+	// Reflection library
+	implementation group: "org.reflections", name: "reflections", version: "0.9.11"
 
-    implementation group: 'org.liquibase', name: 'liquibase-cdi', version: '3.6.2'
+	// Persistence (Hibernate as the JPA spec provider)
+	implementation group: "org.hibernate", name: "hibernate-core", version: "5.3.7.Final"
 
-    // Testing
-    testImplementation group: 'com.squareup.okhttp3', name: 'okhttp',               version: '3.11.0'
-    testImplementation group: 'org.junit.jupiter',    name: 'junit-jupiter-api',    version: "$junitVersion"
-    testRuntimeOnly    group: 'org.junit.jupiter',    name: 'junit-jupiter-engine', version: "$junitVersion"
+	// An in-memory database
+	implementation group: "org.hsqldb",    name: "hsqldb", version: "2.4.1"
+	implementation group: "org.liquibase", name: "liquibase-cdi", version: "3.6.2"
+
+	// Testing
+	testImplementation group: "com.squareup.okhttp3", name: "okhttp", version: "3.11.0"
+	
+	testImplementation group: "org.junit.jupiter", name: "junit-jupiter-api", version: "$versions.junit"
+	
+	testRuntimeOnly group: "org.junit.jupiter", name: "junit-jupiter-engine", version: "$versions.junit"
+}
+
+tasks.withType(JavaCompile) {
+	options.compilerArgs += "-proc:none"
+}
+
+test {
+	useJUnitPlatform()
 }

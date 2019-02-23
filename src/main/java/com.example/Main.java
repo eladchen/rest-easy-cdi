@@ -73,6 +73,7 @@ public class Main {
         database();
 
         servletsInfoList.forEach( undertowServer::addServlet );
+
         undertowServer.setWeld( weld );
         undertowServer.setDeploymentInfo( deploymentInfo() );
 
@@ -83,7 +84,7 @@ public class Main {
 
     // Make this example more CDI based?
     // This could potentially ease the testing setup.
-    static void database() throws RuntimeException {
+    private static void database() throws RuntimeException {
         // Create an in-memory database.
         try {
             Class.forName( JDBCDriver.class.getName() );
@@ -102,7 +103,7 @@ public class Main {
         }
     }
 
-    static DeploymentInfo deploymentInfo() {
+    private static DeploymentInfo deploymentInfo() {
         final DeploymentInfo deploymentInfo = Servlets.deployment();
         final ClassLoader classLoader = Main.class.getClassLoader();
         final ResourceManager resourceManager = new ClassPathResourceManager( classLoader );
@@ -116,7 +117,7 @@ public class Main {
         return deploymentInfo;
     }
 
-    static ServletInfo restEasyServlet() {
+    private static ServletInfo restEasyServlet() {
         final ServletInfo servletInfo = Servlets.servlet( "restEasyServlet", HttpServlet30Dispatcher.class );
 
         // "resteasy.injector.factory" isn't needed with v3 container according the the user-guide (48.4)
@@ -135,7 +136,7 @@ public class Main {
         return servletInfo;
     }
 
-    static ServletInfo httpServlet() {
+    private static ServletInfo httpServlet() {
         final ServletInfo servletInfo = Servlets.servlet( "httpServlet", EchoServlet.class );
 
         servletInfo.setRequireWelcomeFileMapping( false );
@@ -144,7 +145,7 @@ public class Main {
         return servletInfo;
     }
 
-    static Weld weld() {
+    private static Weld weld() {
         return Welder.syntheticWeldContainer( Main.class.getPackage().getName() );
     }
 
