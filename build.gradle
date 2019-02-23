@@ -58,16 +58,23 @@ dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j18-impl', version: "$log4jVersion"
 
     // Restful (RestEasy as the JAX-RS spec & its extensions)
-    implementation group: 'org.jboss.resteasy', name: 'resteasy-cdi',              version: "$restEasyVersion"
-    implementation group: 'org.jboss.resteasy', name: 'resteasy-jaxrs',            version: "$restEasyVersion"
-    implementation group: 'org.jboss.resteasy', name: 'resteasy-jackson-provider', version: "$restEasyVersion"
+    implementation group: 'org.jboss.resteasy', name: 'resteasy-cdi',                 version: "$restEasyVersion"
+    implementation group: 'org.jboss.resteasy', name: 'resteasy-jaxrs',               version: "$restEasyVersion"
+    implementation group: 'org.jboss.resteasy', name: 'resteasy-jackson-provider',    version: "$restEasyVersion"
 
+    // Reflection library
     implementation group: 'org.reflections', name: 'reflections', version: '0.9.11'
+
+    // Persistence (Hibernate as the JPA provider)
+    implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.3.7.Final'
+
+    // An in-memory database
+    implementation group: 'org.hsqldb', name: 'hsqldb', version: '2.4.1'
+
+    implementation group: 'org.liquibase', name: 'liquibase-cdi', version: '3.6.2'
 
     // Testing
     testImplementation group: 'com.squareup.okhttp3', name: 'okhttp',               version: '3.11.0'
     testImplementation group: 'org.junit.jupiter',    name: 'junit-jupiter-api',    version: "$junitVersion"
     testRuntimeOnly    group: 'org.junit.jupiter',    name: 'junit-jupiter-engine', version: "$junitVersion"
-
-
 }

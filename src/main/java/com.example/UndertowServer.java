@@ -1,9 +1,7 @@
 package com.example;
 
-import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
-import io.undertow.server.handlers.PathHandler;
 import io.undertow.servlet.Servlets;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
@@ -11,25 +9,24 @@ import io.undertow.servlet.api.InstanceFactory;
 import io.undertow.servlet.api.InstanceHandle;
 import io.undertow.servlet.api.ListenerInfo;
 import io.undertow.servlet.api.ServletInfo;
+
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
 
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletException;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class UndertowServer {
-    private DeploymentInfo deploymentInfo;
-    private List<ServletInfo> servletInfoList;
     private Weld weld;
-    private WeldContainer weldContainer;
     private Undertow undertow;
-
-    public UndertowServer() {
-        servletInfoList = new ArrayList<>();
-        deploymentInfo = Servlets.deployment();
-    }
+    private WeldContainer weldContainer;
+    private DeploymentInfo deploymentInfo = Servlets.deployment();
+    private List<ServletInfo> servletInfoList = new ArrayList<>();
+    private Function<HttpHandler, HttpHandler> handlerMiddleware = Function.identity();
 
     public void addServlet( ServletInfo servletInfo ) {
         servletInfoList.add( servletInfo );
@@ -47,19 +44,14 @@ public class UndertowServer {
         this.weldContainer = weldContainer;
     }
 
+    public void setHttpMiddleware( Function<HttpHandler, HttpHandler> func ) {
+        this.handlerMiddleware = func;
+    }
+
     public void start( Undertow.Builder undertowBuilder ) throws RuntimeException {
         try {
             if ( undertow == null ) {
-                final PathHandler pathHandler = Handlers.path( Handlers.redirect( "/" ) );
-
-                WeldContainer container = null;
-
-                if ( weldContainer != null ) {
-                    container = weldContainer;
-                }
-                else if ( weld != null ) {
-                    container = weld.initialize();
-                }
+                final WeldContainer container = getWeldContainer();
 
                 if ( container != null ) {
                     weldContainer = container;
@@ -71,15 +63,17 @@ public class UndertowServer {
                     deploymentInfo.addServlet( servletInfo );
                 }
 
-                HttpHandler httpHandler = deploy( deploymentInfo );
+                HttpHandler httpHandler = servletsHandler( deploymentInfo );
 
-                for ( ServletInfo servletInfo : servletInfoList ) {
-                    for ( String mapping : servletInfo.getMappings() ) {
-                        pathHandler.addPrefixPath( mapping, httpHandler );
+                if ( handlerMiddleware != null ) {
+                    httpHandler = handlerMiddleware.apply( httpHandler );
+
+                    if ( httpHandler == null ) {
+                        throw new NullPointerException( "httpHandler can not be null" );
                     }
                 }
 
-                undertow = undertowBuilder.setHandler( pathHandler ).build();
+                undertow = undertowBuilder.setHandler( httpHandler ).build();
 
                 undertow.start();
 
@@ -108,7 +102,20 @@ public class UndertowServer {
         }
     }
 
-    static HttpHandler deploy( DeploymentInfo deploymentInfo ) throws ServletException {
+    private WeldContainer getWeldContainer() {
+        WeldContainer container = null;
+
+        if ( weldContainer != null ) {
+            container = weldContainer;
+        }
+        else if ( weld != null ) {
+            container = weld.initialize();
+        }
+
+        return container;
+    }
+
+    static HttpHandler servletsHandler( DeploymentInfo deploymentInfo ) throws ServletException {
         DeploymentManager deploymentManager = Servlets.defaultContainer().addDeployment( deploymentInfo );
 
         deploymentManager.deploy();
