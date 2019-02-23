@@ -7,11 +7,11 @@ project.targetCompatibility = JavaVersion.VERSION_1_8
 
 ext {
 	versions = [
-		log4j   : "2.11.1",
+		log4j: 		"2.11.1",
 		undertow: "2.0.15.Final",
 		restEasy: "3.6.2.Final",
-		weld    : "3.0.5.Final",
-		junit   : "5.3.1",
+		weld: 		"3.0.5.Final",
+		junit: 		"5.3.1",
 	]
 }
 
