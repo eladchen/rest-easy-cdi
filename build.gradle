@@ -48,7 +48,7 @@ dependencies {
 	implementation group: 'org.jboss.xnio',		 name: 'xnio-nio',			version: '3.6.5.Final'
 	implementation group: 'org.jboss.threads', name: 'jboss-threads', version: '2.3.2.Final'
 
-	// CDI (Weld as the JSR-299 spec provider)
+	// CDI (Weld as the JSR-365 spec provider: https://jcp.org/en/jsr/detail?id=365)
 	implementation group: "org.jboss", 							name: "jandex", 					 version: "2.1.0.Beta1"
 	implementation group: "org.jboss.weld.se", 			name: "weld-se-core", 		 version: "$versions.weld"
 	implementation group: "org.jboss.weld.servlet", name: "weld-servlet-core", version: "$versions.weld"
