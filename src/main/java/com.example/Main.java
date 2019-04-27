@@ -97,7 +97,7 @@ public class Main {
             }
         }
         catch (Exception e) {
-            logger.error( "Failed to configure the database {}", e );
+            logger.error( "Failed to configure the database", e );
 
             throw new RuntimeException( e );
         }

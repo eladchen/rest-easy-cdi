@@ -1,0 +1,4 @@
+- [ ] ClickDao should be retrieved via a managed bean, with a scope of "ApplicationScoped".
+- [ ] Convert persistence.xml to PersistenceUnitInfo [Use this](https://vladmihalcea.com/how-to-bootstrap-jpa-programmatically-without-the-persistence-xml-configuration-file/)
+- [ ] Implement transaction management using CDI.
+- [ ] https://www.baeldung.com/liquibase-refactor-schema-of-java-app
