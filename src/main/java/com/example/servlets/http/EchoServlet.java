@@ -1,29 +1,40 @@
 package com.example.servlets.http;
 
 import com.example.beans.TextProcessing;
+import com.example.beans.LowerCaseTextProcessing;
+import com.example.beans.UpperCaseTextProcessing;
 
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
-import javax.inject.Named;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@RequestScoped
+import static com.example.servlets.Routes.ECHO_LOWERCASE;
+
 public class EchoServlet extends HttpServlet {
-    @Inject
-    @Named( "upperCase" )
-    TextProcessing upperCaseTextProcessing;
+	@Inject
+	LowerCaseTextProcessing lowerCaseTextProcessing;
 
-    @Inject
-    BeanManager manager;
+	@Inject
+	UpperCaseTextProcessing upperCaseTextProcessing;
 
-	protected void doGet( HttpServletRequest req, HttpServletResponse resp ) throws IOException {
-		resp.setContentType( "text/plain" );
+	@Inject
+	BeanManager manager;
 
-		resp.getWriter().append( upperCaseTextProcessing.processText( req.getParameter( "msg" ) ) );
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		TextProcessing textProcessing;
+		resp.setContentType("text/plain");
+
+		if (req.getServletPath().endsWith(ECHO_LOWERCASE)) {
+			textProcessing = lowerCaseTextProcessing;
+		}
+		else {
+			textProcessing = upperCaseTextProcessing;
+		}
+
+		resp.getWriter().append(textProcessing.processText(req.getParameter("msg")));
 	}
 }

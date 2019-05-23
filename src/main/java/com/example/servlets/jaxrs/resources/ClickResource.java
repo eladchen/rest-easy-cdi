@@ -2,7 +2,7 @@ package com.example.servlets.jaxrs.resources;
 
 import com.example.click.Click;
 import com.example.click.ClickDao;
-import com.example.servlets.CommonRoutes;
+import com.example.servlets.Routes;
 
 import javax.enterprise.context.RequestScoped;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +26,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 @RequestScoped
-@Path(CommonRoutes.STATEFUL)
+@Path(Routes.JAX_RS_CLICK_RESOURCE)
 @Produces(MediaType.APPLICATION_JSON)
 public class ClickResource {
     @Context
