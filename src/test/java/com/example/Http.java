@@ -11,12 +11,8 @@ import org.codehaus.jackson.type.TypeReference;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class Http {
 	private static final OkHttpClient client = new OkHttpClient();

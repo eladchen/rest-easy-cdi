@@ -39,7 +39,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.example.servlets.Routes.JAX_RS_SERVLET;
 import static io.undertow.util.URLUtils.normalizeSlashes;
 import static org.jboss.resteasy.plugins.server.servlet.ResteasyContextParameters.RESTEASY_SERVLET_MAPPING_PREFIX;
 
@@ -131,12 +130,12 @@ public class Main {
 		// *** This isn't right when using an embedded setup such as this one ***
 		servletInfo.addInitParam("resteasy.injector.factory", CdiInjectorFactory.class.getName());
 		servletInfo.addInitParam("javax.ws.rs.Application", JaxRsApp.class.getName());
-		servletInfo.addInitParam(RESTEASY_SERVLET_MAPPING_PREFIX, JAX_RS_SERVLET);
+		servletInfo.addInitParam(RESTEASY_SERVLET_MAPPING_PREFIX, Routes.JAX_RS_SERVLET);
 
 		servletInfo.setLoadOnStartup(1);
 		servletInfo.setAsyncSupported(true);
 		servletInfo.setEnabled(true);
-		servletInfo.addMapping(normalizeSlashes(JAX_RS_SERVLET) + "/*");
+		servletInfo.addMapping(normalizeSlashes(Routes.JAX_RS_SERVLET) + "/*");
 		servletInfo.setRequireWelcomeFileMapping(false);
 
 		return servletInfo;

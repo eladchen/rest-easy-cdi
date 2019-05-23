@@ -1,5 +1,6 @@
 package com.example;
 
+import com.example.servlets.Routes;
 import io.undertow.servlet.api.ServletInfo;
 
 import okhttp3.MediaType;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static com.example.servlets.Routes.*;
 import static io.undertow.util.URLUtils.normalizeSlashes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -63,33 +63,33 @@ class TestServerServlets {
 	void jaxRsServletUppercase() {
 		final String message = "test_str";
 
-		assertEquals(message.toUpperCase(), requestBody(JAX_RS_SERVLET + JAX_RS_ECHO_RESOURCE + ECHO_UPPERCASE + "?msg=" + message));
+		assertEquals(message.toUpperCase(), requestBody(Routes.JAX_RS_SERVLET + Routes.JAX_RS_ECHO_RESOURCE + Routes.ECHO_UPPERCASE + "?msg=" + message));
 	}
 
 	@Test
 	void jaxRsServletLowercase() {
 		final String message = "TEST_STR";
 
-		assertEquals(message.toLowerCase(), requestBody(JAX_RS_SERVLET + JAX_RS_ECHO_RESOURCE + ECHO_LOWERCASE + "?msg=" + message));
+		assertEquals(message.toLowerCase(), requestBody(Routes.JAX_RS_SERVLET + Routes.JAX_RS_ECHO_RESOURCE + Routes.ECHO_LOWERCASE + "?msg=" + message));
 	}
 
 	@Test
 	void httpServletUppercase() {
 		final String message = "test_str";
 
-		assertEquals(message.toUpperCase(), requestBody(HTTP_SERVLET + ECHO_UPPERCASE + "?msg=" + message));
+		assertEquals(message.toUpperCase(), requestBody(Routes.HTTP_SERVLET + Routes.ECHO_UPPERCASE + "?msg=" + message));
 	}
 
 	@Test
 	void httpServletLowercase() {
 		final String message = "TEST_STR";
 
-		assertEquals(message.toLowerCase(), requestBody(HTTP_SERVLET + ECHO_LOWERCASE + "?msg=" + message));
+		assertEquals(message.toLowerCase(), requestBody(Routes.HTTP_SERVLET + Routes.ECHO_LOWERCASE + "?msg=" + message));
 	}
 
 	@Test
 	void testPersistence() {
-		final String clickRoute = JAX_RS_SERVLET + JAX_RS_CLICK_RESOURCE + "/click/";
+		final String clickRoute = Routes.JAX_RS_SERVLET + Routes.JAX_RS_CLICK_RESOURCE + "/click/";
 
 		final Map<String, Object> click = requestBodyAsMap(clickRoute, requestBuilder -> {
 			requestBuilder.post(RequestBody.create(null, new byte[0]));
