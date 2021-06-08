@@ -11,7 +11,7 @@
 		<versions.restEasy>3.6.2.Final</versions.restEasy>
 		<versions.log4j>2.13.3</versions.log4j>
 		<versions.junit>5.3.1</versions.junit>
-		<versions.xnio>3.6.5.Final</versions.xnio>
+		<versions.xnio>3.7.9.Final</versions.xnio>
 	</properties>
 	<dependencies>
 		<dependency>
