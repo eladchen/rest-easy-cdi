@@ -9,7 +9,7 @@
 		<versions.weld>3.0.5.Final</versions.weld>
 		<versions.undertow>2.0.15.Final</versions.undertow>
 		<versions.restEasy>3.6.2.Final</versions.restEasy>
-		<versions.log4j>2.13.3</versions.log4j>
+		<versions.log4j>2.15.0</versions.log4j>
 		<versions.junit>5.3.1</versions.junit>
 		<versions.xnio>3.6.5.Final</versions.xnio>
 	</properties>
